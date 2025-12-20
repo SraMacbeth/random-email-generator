@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Email Generator - Free & Instant - YourMail.io</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            color: #1a73e8;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+        .email-display {
+            background-color: #f1f3f4;
+            border: 2px dashed #dadce0;
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 1.2em;
+            word-break: break-all;
+            margin-bottom: 25px;
+            color: #202124;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            font-weight: bold;
+        }
+        .copy-btn {
+            position: absolute;
+            right: 10px;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            text-align: left;
+        }
+        .field-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .checkbox-group {
+            width: 100%;
+            margin: 10px 0;
+        }
+        .gen-btn {
+            width: 100%;
+            background-color: #1a73e8;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .gen-btn:hover {
+            background-color: #1557b0;
+        }
+        .ad-placeholder {
+            margin-top: 30px;
+            padding: 20px;
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            font-size: 0.8em;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Random Email Generator</h1>
+        
+        <div class="email-display" id="emailResult">
+            loading...
+        </div>
+
+        <div class="controls">
+            <div class="field-group">
+                <label for="length">User Length</label>
+                <input type="number" id="length" value="10" min="5" max="25">
+            </div>
+            <div class="field-group">
+                <label for="domain">Domain</label>
+                <input type="text" id="domain" value="randommail.io">
+            </div>
+
+            <div class="checkbox-group">
+                <label><input type="checkbox" id="nums" checked> Include Numbers</label>
+                <label><input type="checkbox" id="chars"> Include Special Characters</label>
+            </div>
+            
+            <button class="gen-btn" onclick="generate()">Generate New Email</button>
+        </div>
+
+        <div class="ad-placeholder">
+            ADVERTISEMENT SPACE (Google AdSense)
+        </div>
+    </div>
+
+    <script>
+        async function generate() {
+            const len = document.getElementById('length').value;
+            const dom = document.getElementById('domain').value;
+            const n = document.getElementById('nums').checked;
+            const s = document.getElementById('chars').checked;
+
+            const params = new URLSearchParams({
+                length: len,
+                domain: dom,
+                include_numbers: n,
+                include_special_chars: s
+            });
+
+            const res = await fetch(`/generate?${params}`);
+            const data = await res.json();
+            
+            document.getElementById('emailResult').innerHTML = `
+                ${data.email}
+                <button class="copy-btn" onclick="copy('${data.email}')">Copy</button>
+            `;
+        }
+
+        function copy(text) {
+            navigator.clipboard.writeText(text);
+            alert('Copied to clipboard!');
+        }
+
+        // Generate one on load
+        generate();
+    </script>
+</body>
+</html>
