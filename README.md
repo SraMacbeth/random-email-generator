@@ -26,7 +26,7 @@ Esta aplicación permite a los usuarios crear correos electrónicos personalizad
 
 1.  **Clona el repositorio:**
     ```bash
-    git clone [https://github.com/SraMacbeth/random-email-generator.git](https://github.com/SraMacbeth/random-email-generator.git)
+    git clone https://github.com/SraMacbeth/random-email-generator.git
     cd random-email-generator
     ```
 
