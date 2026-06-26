@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <!-- Hace que el sitio sea responsivo en dispositivos móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Random Email Generator - Free & Instant - YourMail.io</title>
     <style>
+        /* Estilos generales del cuerpo: centra todo vertical y horizontalmente */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8f9fa;
@@ -13,39 +15,47 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
+            min-height: 100vh; /* Ocupa al menos toda la altura de la pantalla */
             margin: 0;
             padding: 20px;
         }
+
+        /* Tarjeta blanca central que contiene toda la interfaz */
         .container {
             background-color: #fff;
             padding: 40px;
             border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05); /* Sombra suave */
             max-width: 600px;
             width: 100%;
             text-align: center;
         }
+
+        /* Título principal en azul */
         h1 {
             color: #1a73e8;
             margin-bottom: 20px;
             font-size: 2em;
         }
+
+        /* Caja donde se muestra el email generado */
         .email-display {
             background-color: #f1f3f4;
-            border: 2px dashed #dadce0;
+            border: 2px dashed #dadce0; /* Borde punteado decorativo */
             padding: 20px;
             border-radius: 8px;
             font-size: 1.2em;
-            word-break: break-all;
+            word-break: break-all; /* Evita que un email largo rompa el layout */
             margin-bottom: 25px;
             color: #202124;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
+            position: relative; /* Necesario para posicionar el botón "Copy" dentro */
             font-weight: bold;
         }
+
+        /* Botón "Copy" posicionado en la esquina derecha del email display */
         .copy-btn {
             position: absolute;
             right: 10px;
@@ -57,33 +67,45 @@
             cursor: pointer;
             font-size: 0.8em;
         }
+
+        /* Contenedor de los controles (inputs y checkboxes) con diseño flexible */
         .controls {
             display: flex;
-            flex-wrap: wrap;
+            flex-wrap: wrap; /* Se adapta a pantallas pequeñas pasando a otra línea */
             gap: 15px;
             text-align: left;
         }
+
+        /* Grupo individual de campo (label + input) */
         .field-group {
             flex: 1;
-            min-width: 200px;
+            min-width: 200px; /* Evita que los campos queden demasiado angostos */
         }
+
+        /* Estilo de las etiquetas de los campos */
         label {
             display: block;
             margin-bottom: 5px;
             font-size: 0.9em;
             font-weight: 600;
         }
+
+        /* Estilo unificado para inputs de texto y número */
         input[type="text"], input[type="number"] {
             width: 100%;
             padding: 10px;
             border: 1px solid #ced4da;
             border-radius: 4px;
-            box-sizing: border-box;
+            box-sizing: border-box; /* El padding no agranda el elemento */
         }
+
+        /* Contenedor de los checkboxes, ocupa todo el ancho */
         .checkbox-group {
             width: 100%;
             margin: 10px 0;
         }
+
+        /* Botón principal para generar el email */
         .gen-btn {
             width: 100%;
             background-color: #1a73e8;
@@ -94,11 +116,15 @@
             font-size: 1.1em;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.2s; /* Animación suave al hacer hover */
         }
+
+        /* Oscurece el botón al pasar el cursor */
         .gen-btn:hover {
             background-color: #1557b0;
         }
+
+        /* Espacio reservado para publicidad (estilo visual de aviso) */
         .ad-placeholder {
             margin-top: 30px;
             padding: 20px;
@@ -113,29 +139,37 @@
 <body>
     <div class="container">
         <h1>Random Email Generator</h1>
-        
+
+        <!-- Caja donde se inyecta el email generado desde JavaScript -->
         <div class="email-display" id="emailResult">
             loading...
         </div>
 
         <div class="controls">
+            <!-- Campo numérico para definir la longitud del nombre de usuario -->
             <div class="field-group">
                 <label for="length">User Length</label>
                 <input type="number" id="length" value="10" min="5" max="25">
             </div>
+
+            <!-- Campo de texto para definir el dominio del email -->
             <div class="field-group">
                 <label for="domain">Domain</label>
                 <input type="text" id="domain" value="randommail.io">
             </div>
 
+            <!-- Checkboxes para opciones adicionales del email -->
             <div class="checkbox-group">
+                <!-- 'checked' hace que la casilla esté marcada por defecto -->
                 <label><input type="checkbox" id="nums" checked> Include Numbers</label>
                 <label><input type="checkbox" id="chars"> Include Special Characters</label>
             </div>
-            
+
+            <!-- Botón que llama a la función generate() al hacer clic -->
             <button class="gen-btn" onclick="generate()">Generate New Email</button>
         </div>
 
+        <!-- Espacio visual reservado para un anuncio de Google AdSense -->
         <div class="ad-placeholder">
             ADVERTISEMENT SPACE (Google AdSense)
         </div>
@@ -143,11 +177,13 @@
 
     <script>
         async function generate() {
+            // Obtiene el valor actual de cada control del formulario
             const len = document.getElementById('length').value;
             const dom = document.getElementById('domain').value;
-            const n = document.getElementById('nums').checked;
-            const s = document.getElementById('chars').checked;
+            const n = document.getElementById('nums').checked;   // true o false
+            const s = document.getElementById('chars').checked;  // true o false
 
+            // Construye los parámetros de la URL: /generate?length=10&domain=...
             const params = new URLSearchParams({
                 length: len,
                 domain: dom,
@@ -155,21 +191,26 @@
                 include_special_chars: s
             });
 
+            // Hace una petición GET al backend FastAPI con los parámetros
             const res = await fetch(`/generate?${params}`);
+
+            // Convierte la respuesta JSON a un objeto JavaScript: { email: "..." }
             const data = await res.json();
-            
+
+            // Inserta el email y el botón "Copy" dentro del div de resultado
             document.getElementById('emailResult').innerHTML = `
                 ${data.email}
                 <button class="copy-btn" onclick="copy('${data.email}')">Copy</button>
             `;
         }
 
+        // Copia el texto recibido al portapapeles del usuario
         function copy(text) {
             navigator.clipboard.writeText(text);
             alert('Copied to clipboard!');
         }
 
-        // Generate one on load
+        // Genera un email automáticamente al cargar la página
         generate();
     </script>
 </body>
